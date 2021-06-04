@@ -62,16 +62,12 @@ export default {
     ...mapGetters('query', ['queries', 'predefinedQuery']),
   },
   methods: {
-    ...mapActions('query', ['getExistingQueries', 'getPredefinedQueryValue']),
-    getQuerySlug() {
+    ...mapActions('query', ['getPredefinedQueryValue']),
+    async getQuerySlug() {
       const query = this.query
-      this.getPredefinedQueryValue(query)
-      if (this.predefinedQuery) {
-        this.slug = this.predefinedQuery.key
-        this.$emit('find-query', this.slug)
-      } else {
-        this.$emit('find-query', query)
-      }
+      await this.getPredefinedQueryValue(query)
+      this.slug = this.predefinedQuery ? this.predefinedQuery.key : query
+      this.$emit('find-query', this.slug)
     },
     getRandomQuery() {
       const queries = this.queries
@@ -79,7 +75,7 @@ export default {
       const randomIndex = Math.floor(Math.random() * queriesLength)
       const randomQuery = queries[randomIndex]
       this.getPredefinedQueryValue(randomQuery)
-      this.query = this.predefinedQuery.value
+      this.query = this.predefinedQuery ? this.predefinedQuery.value : null
     },
   },
 }
