@@ -1,63 +1,54 @@
 <template>
-  <div class="container">
+  <main class="main">
     <div>
-      <Logo />
-      <h1 class="title">sql-editor</h1>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--green"
-        >
-          Documentation
-        </a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          GitHub
-        </a>
-      </div>
+      <Logo class="logo" />
+      <section class="editor">
+        <h1 class="main__title">Online SQL IDE</h1>
+        <query-editor @find-query="fetchQuery" />
+      </section>
     </div>
-  </div>
+  </main>
 </template>
 
 <script>
-export default {}
+import queryEditor from '@/components/Editor'
+import { mapActions, mapGetters } from 'vuex'
+export default {
+  name: 'Index',
+  components: {
+    queryEditor,
+  },
+  computed: {
+    ...mapGetters('query', ['queryResult']),
+  },
+  methods: {
+    ...mapActions('query', ['getQueryResult']),
+    async fetchQuery(query) {
+      try {
+        await this.getQueryResult(query)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+  },
+}
 </script>
 
-<style>
-.container {
-  margin: 0 auto;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+<style lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code&family=Jost:wght@400;500;600;700&display=swap');
+* {
+  font-family: 'Jost', sans-serif;
+}
+.main {
+  padding: 30px;
+  &__title {
+    font-weight: 700;
+  }
 }
 
-.title {
-  font-family: 'Quicksand', 'Source Sans Pro', -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
-
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
-
-.links {
-  padding-top: 15px;
+.logo {
+  width: 100px;
+  height: 40px;
+  margin-bottom: 40px;
 }
 </style>
