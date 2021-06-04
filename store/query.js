@@ -29,7 +29,7 @@ export const mutations = {
 
 export const actions = {
   async getQueryResult({ commit }, query) {
-    const result = await this.$content(`/CSV/${query}`).fetch()
+    const result = await this.$content(`CSV/${query}`).fetch()
     commit('SET_QUERY_RESULT', result)
   },
   async getExistingQueries({ commit, dispatch }) {
