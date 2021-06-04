@@ -6,7 +6,8 @@ export const state = () => ({
 })
 
 export const getters = {
-  queryResult: (state) => state.queryResult.body,
+  queryResult: (state) =>
+    state.queryResult ? state.queryResult.body : state.queryResult,
   queries: (state) => state.queriesArray.map((query) => query.slug),
   predefinedQueries: (state) => state.predefinedQueries,
   predefinedQuery: (state) => state.predefinedQuery,
@@ -50,9 +51,9 @@ export const actions = {
     const predefinedQueries = state.predefinedQueries
     let predefinedQuery = null
     for (const [key, value] of Object.entries(predefinedQueries)) {
-      predefinedQuery = slug === key || slug === value ? { key, value } : null
-      if (predefinedQuery) {
-        commit('SET_PREDEFINED_QUERY_OBJECT', predefinedQuery)
+      if (slug === key || slug === value) {
+        predefinedQuery = { key, value }
+        return commit('SET_PREDEFINED_QUERY_OBJECT', predefinedQuery)
       }
     }
   },
