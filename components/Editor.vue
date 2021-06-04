@@ -64,8 +64,12 @@ export default {
     getQuerySlug() {
       const query = this.query
       this.getPredefinedQueryValue(query)
-      this.slug = this.predefinedQuery.key
-      this.$emit('find-query', this.slug)
+      if (this.predefinedQuery) {
+        this.slug = this.predefinedQuery.key
+        this.$emit('find-query', this.slug)
+      } else {
+        this.$emit('find-query', query)
+      }
     },
     getRandomQuery() {
       const queries = this.queries
