@@ -1,10 +1,15 @@
 <template>
-  <form class="editor" @submit.prevent="getQuerySlug">
+  <form class="editor" @submit.prevent>
     <div class="editor__div">
       <h2 class="editor__text editor__text--margin-bottom">
         Type in your queries here.
       </h2>
-      <button type="submit" class="editor__button" :disabled="!query">
+      <button
+        type="submit"
+        class="editor__button"
+        :disabled="!query"
+        @click.prevent="getQuerySlug"
+      >
         <run-icon class="editor__icon" />
         Run Query
       </button>
@@ -15,7 +20,7 @@
     >
       <textarea
         id="query"
-        v-model="query"
+        v-model.trim="query"
         name="query"
         cols="30"
         rows="10"
