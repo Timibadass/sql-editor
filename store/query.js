@@ -1,5 +1,5 @@
 export const state = () => ({
-  queryResult: 0,
+  queryResult: [],
   queriesArray: null,
   predefinedQueries: null,
   predefinedQuery: null,
