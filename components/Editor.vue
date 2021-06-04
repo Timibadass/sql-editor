@@ -31,6 +31,7 @@
     </div>
     <button
       class="editor__button editor__button--margin-top"
+      :disabled="!queries"
       @click="getRandomQuery"
     >
       Get Random query
