@@ -33,7 +33,7 @@ export const actions = {
     commit('SET_QUERY_RESULT', result)
   },
   async getExistingQueries({ commit, dispatch }) {
-    const queriesArray = await this.$content(`/CSV`).fetch()
+    const queriesArray = await this.$content(`CSV`).fetch()
     commit('SET_EXISTING_QUERIES', queriesArray)
     dispatch('getPredefinedQueries', queriesArray)
   },
