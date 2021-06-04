@@ -54,11 +54,12 @@ export default {
       slug: null,
     }
   },
+  fetch() {
+    const store = this.$nuxt.context.store
+    store.dispatch('query/getExistingQueries')
+  },
   computed: {
     ...mapGetters('query', ['queries', 'predefinedQuery']),
-  },
-  mounted() {
-    this.getExistingQueries()
   },
   methods: {
     ...mapActions('query', ['getExistingQueries', 'getPredefinedQueryValue']),
