@@ -31,6 +31,7 @@
     </div>
     <button
       class="editor__button editor__button--margin-top"
+      :disabled="!queries"
       @click="getRandomQuery"
     >
       Get Random query
@@ -53,11 +54,12 @@ export default {
       slug: null,
     }
   },
+  fetch() {
+    const store = this.$nuxt.context.store
+    store.dispatch('query/getExistingQueries')
+  },
   computed: {
     ...mapGetters('query', ['queries', 'predefinedQuery']),
-  },
-  mounted() {
-    this.getExistingQueries()
   },
   methods: {
     ...mapActions('query', ['getExistingQueries', 'getPredefinedQueryValue']),
