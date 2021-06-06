@@ -1,4 +1,7 @@
-# sql-editor
+# sql-editor Performance
+
+```[Web.dev Performance Score](https://lighthouse-dot-webdotdevsite.appspot.com//lh/html?url=https%3A%2F%2Fsql-editor-test.netlify.app%2F)
+```
 
 ## Build Setup
 
