@@ -35,7 +35,10 @@ export const mutations = {
 export const actions = {
   async getQueryResult({ commit, state }, query) {
     const predefinedQuery = state.predefinedQuery
-    const queryType = predefinedQuery.filterValue ? predefinedQuery.key : query
+    const queryType =
+      predefinedQuery && predefinedQuery.filterValue
+        ? predefinedQuery.key
+        : query
     const result = await this.$content(`CSV/${queryType}`).fetch()
     if (predefinedQuery.filterValue) {
       const filteredQuery = result.body.filter((object) => {
@@ -77,6 +80,20 @@ export const actions = {
       slug === statePredefinedQuery.key
     ) {
       return commit('SET_PREDEFINED_QUERY_OBJECT', statePredefinedQuery)
+    }
+    if (slug.includes('=')) {
+      const texts = slug.split(' ')
+      const heading = texts[texts.indexOf('where') + 1]
+      const filterValue = texts[texts.indexOf('=') + 1]
+      const keyLowerCase = texts[texts.indexOf('from') + 1]
+      const key = keyLowerCase.charAt(0).toUpperCase() + keyLowerCase.slice(1)
+      const value = `select * from ${key}`
+      return commit('SET_PREDEFINED_QUERY_OBJECT', {
+        heading,
+        filterValue,
+        key,
+        value,
+      })
     }
     commit('SET_PREDEFINED_QUERY_OBJECT', predefinedQuery)
   },
