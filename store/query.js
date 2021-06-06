@@ -6,8 +6,7 @@ export const state = () => ({
 })
 
 export const getters = {
-  queryResult: (state) =>
-    state.queryResult ? state.queryResult.body : state.queryResult,
+  queryResult: (state) => state.queryResult,
   queries: (state) => state.queriesArray.map((query) => query.slug),
   predefinedQueries: (state) => state.predefinedQueries,
   predefinedQuery: (state) => state.predefinedQuery,
@@ -31,7 +30,7 @@ export const mutations = {
 export const actions = {
   async getQueryResult({ commit }, query) {
     const result = await this.$content(`CSV/${query}`).fetch()
-    commit('SET_QUERY_RESULT', result)
+    commit('SET_QUERY_RESULT', result.body)
   },
   async getExistingQueries({ commit, dispatch }) {
     const queriesArray = await this.$content(`CSV`).fetch()
@@ -56,5 +55,14 @@ export const actions = {
         return commit('SET_PREDEFINED_QUERY_OBJECT', predefinedQuery)
       }
     }
+  },
+  getQueryByHeading({ commit, state }, headingObject) {
+    const heading = headingObject.heading
+    const value = headingObject.category
+    const queryResult = state.queryResult
+    const newQueryResult = queryResult.filter((result) => {
+      return result[heading] === value
+    })
+    commit('SET_QUERY_RESULT', newQueryResult)
   },
 }
