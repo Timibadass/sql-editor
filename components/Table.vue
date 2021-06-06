@@ -127,6 +127,7 @@ export default {
     display: flex;
     border: 1px solid rgba(191, 198, 220, 0.5);
     border-radius: 8px;
+    min-height: 300px;
     margin-top: 14px;
     background: #fff;
     justify-content: center;
