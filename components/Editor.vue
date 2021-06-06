@@ -21,6 +21,7 @@
       <textarea
         id="query"
         v-model.trim="query"
+        aria-label="query-search"
         name="query"
         cols="30"
         rows="10"
@@ -139,7 +140,7 @@ export default {
     font-family: 'Fira Code', monospace;
     font-size: 16px;
     line-height: 21px;
-    color: #8789a4;
+    color: #4154b8;
     padding: 20px 5px;
     background: #fff;
     &:focus-within {
