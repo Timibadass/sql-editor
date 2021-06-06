@@ -4,15 +4,7 @@
       <h2 class="editor__text editor__text--margin-bottom">
         Type in your queries here.
       </h2>
-      <button
-        type="submit"
-        class="editor__button"
-        :disabled="!query"
-        @click.prevent="getQuerySlug"
-      >
-        <run-icon class="editor__icon" />
-        Run Query
-      </button>
+      <run-button :disabled="!query" @click="getQuerySlug" />
     </div>
     <div
       class="editor-textarea__container"
@@ -41,12 +33,12 @@
 </template>
 
 <script>
-import runIcon from '@/components/icons/RunIcon'
 import { mapActions, mapGetters } from 'vuex'
+import runButton from '@/components/Button'
 export default {
   name: 'SqlEditor',
   components: {
-    runIcon,
+    runButton,
   },
   data() {
     return {
@@ -61,6 +53,15 @@ export default {
   },
   computed: {
     ...mapGetters('query', ['queries', 'predefinedQuery']),
+  },
+  watch: {
+    predefinedQuery(query) {
+      if (query && query.filterValue) {
+        this.query = `${query.value} where ${query.heading} = ${query.filterValue}`
+      } else {
+        this.query = query ? query.value : null
+      }
+    },
   },
   methods: {
     ...mapActions('query', ['getPredefinedQueryValue']),
