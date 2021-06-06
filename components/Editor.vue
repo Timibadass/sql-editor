@@ -54,6 +54,15 @@ export default {
   computed: {
     ...mapGetters('query', ['queries', 'predefinedQuery']),
   },
+  watch: {
+    predefinedQuery(query) {
+      if (query && query.filterValue) {
+        this.query = `${query.value} where ${query.heading} = ${query.filterValue}`
+      } else {
+        this.query = query ? query.value : null
+      }
+    },
+  },
   methods: {
     ...mapActions('query', ['getPredefinedQueryValue']),
     async getQuerySlug() {

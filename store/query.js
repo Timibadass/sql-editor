@@ -3,6 +3,7 @@ export const state = () => ({
   queriesArray: null,
   predefinedQueries: null,
   predefinedQuery: null,
+  queryHistory: [],
 })
 
 export const getters = {
@@ -10,6 +11,7 @@ export const getters = {
   queries: (state) => state.queriesArray.map((query) => query.slug),
   predefinedQueries: (state) => state.predefinedQueries,
   predefinedQuery: (state) => state.predefinedQuery,
+  queryHistory: (state) => state.queryHistory,
 }
 
 export const mutations = {
@@ -25,12 +27,24 @@ export const mutations = {
   SET_PREDEFINED_QUERY_OBJECT(state, predefinedQuery) {
     state.predefinedQuery = predefinedQuery
   },
+  SET_QUERY_HISTORY(state, query) {
+    state.queryHistory.push(query)
+  },
 }
 
 export const actions = {
-  async getQueryResult({ commit }, query) {
-    const result = await this.$content(`CSV/${query}`).fetch()
-    commit('SET_QUERY_RESULT', result.body)
+  async getQueryResult({ commit, state }, query) {
+    const predefinedQuery = state.predefinedQuery
+    const queryType = predefinedQuery.filterValue ? predefinedQuery.key : query
+    const result = await this.$content(`CSV/${queryType}`).fetch()
+    if (predefinedQuery.filterValue) {
+      const filteredQuery = result.body.filter((object) => {
+        return object[predefinedQuery.heading] === predefinedQuery.filterValue
+      })
+      commit('SET_QUERY_RESULT', filteredQuery)
+    } else {
+      commit('SET_QUERY_RESULT', result.body)
+    }
   },
   async getExistingQueries({ commit, dispatch }) {
     const queriesArray = await this.$content(`CSV`).fetch()
@@ -48,6 +62,7 @@ export const actions = {
   },
   getPredefinedQueryValue({ commit, state }, slug) {
     const predefinedQueries = state.predefinedQueries
+    const statePredefinedQuery = state.predefinedQuery
     let predefinedQuery = null
     for (const [key, value] of Object.entries(predefinedQueries)) {
       if (slug === key || slug === value) {
@@ -55,14 +70,29 @@ export const actions = {
         return commit('SET_PREDEFINED_QUERY_OBJECT', predefinedQuery)
       }
     }
+    if (
+      !predefinedQuery &&
+      statePredefinedQuery &&
+      statePredefinedQuery.filterValue &&
+      slug === statePredefinedQuery.key
+    ) {
+      return commit('SET_PREDEFINED_QUERY_OBJECT', statePredefinedQuery)
+    }
+    commit('SET_PREDEFINED_QUERY_OBJECT', predefinedQuery)
   },
-  getQueryByHeading({ commit, state }, headingObject) {
+  saveQuery({ commit }, query) {
+    commit('SET_QUERY_HISTORY', query)
+  },
+  async getQueryByHeading({ commit, state }, headingObject) {
     const heading = headingObject.heading
-    const value = headingObject.category
+    const filterValue = headingObject.category
     const queryResult = state.queryResult
-    const newQueryResult = queryResult.filter((result) => {
-      return result[heading] === value
+    const key = state.predefinedQuery.key
+    const value = state.predefinedQuery.value
+    const newQueryResult = await queryResult.filter((result) => {
+      return result[heading] === filterValue
     })
     commit('SET_QUERY_RESULT', newQueryResult)
+    commit('SET_PREDEFINED_QUERY_OBJECT', { key, value, heading, filterValue })
   },
 }

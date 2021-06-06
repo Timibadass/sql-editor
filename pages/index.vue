@@ -13,25 +13,35 @@
             :class="
               currentTab === 'tableComponent' ? 'main__button--active' : null
             "
+            @click="currentTab = 'tableComponent'"
           >
             Result
           </button>
           <button
             class="main__button main__button--white"
-            :class="currentTab === '' ? 'main__button--active' : null"
+            :class="
+              currentTab === 'historyComponent' ? 'main__button--active' : null
+            "
+            @click="currentTab = 'historyComponent'"
           >
             History
           </button>
           <button
             class="main__button main__button--purple"
             :disabled="!queryResult || queryResult.length < 1"
+            @click="storeQuery"
           >
             <save-icon class="main__icon" />
             Save Query
           </button>
         </nav>
         <keep-alive>
-          <component :is="currentTab" :query-result="queryResult"></component>
+          <component
+            :is="currentTab"
+            :query-result="queryResult"
+            :query-history="queryHistory"
+            @find-query="fetchQuery"
+          ></component>
         </keep-alive>
       </section>
     </div>
@@ -41,30 +51,69 @@
 <script>
 import queryEditor from '@/components/Editor'
 import tableComponent from '@/components/Table'
-import { mapActions, mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 import saveIcon from '@/components/icons/SaveIcon'
+import historyComponent from '@/components/History'
 export default {
   name: 'Index',
   components: {
     queryEditor,
     tableComponent,
     saveIcon,
+    historyComponent,
   },
   data() {
     return {
       currentTab: 'tableComponent',
+      query: null,
+      isError: false,
     }
   },
   computed: {
-    ...mapGetters('query', ['queryResult']),
+    ...mapGetters('query', ['queryResult', 'queryHistory', 'predefinedQuery']),
   },
   methods: {
-    ...mapActions('query', ['getQueryResult']),
+    ...mapActions('query', ['getQueryResult', 'saveQuery']),
+    ...mapMutations('query', ['SET_QUERY_RESULT']),
+    storeQuery() {
+      const queryHistory = this.queryHistory
+      const currentQuery = this.predefinedQuery
+      if (queryHistory.length === 0) {
+        this.saveQuery(this.predefinedQuery)
+      } else if (
+        queryHistory.every((query) => {
+          return this.shallowEqual(query, currentQuery)
+        }) === false
+      ) {
+        this.saveQuery(this.predefinedQuery)
+      }
+      const testquery = queryHistory.every((query) => {
+        return this.shallowEqual(query, currentQuery)
+      })
+      console.log(testquery)
+    },
+    shallowEqual(object1, object2) {
+      const keys1 = Object.keys(object1)
+      const keys2 = Object.keys(object2)
+
+      if (keys1.length !== keys2.length) {
+        return false
+      }
+
+      for (const key of keys1) {
+        if (object1[key] !== object2[key]) {
+          return false
+        }
+      }
+
+      return true
+    },
     async fetchQuery(query) {
+      this.query = query
       try {
         await this.getQueryResult(query)
       } catch (error) {
-        console.error(error)
+        this.SET_QUERY_RESULT([])
       }
     },
   },
@@ -103,6 +152,10 @@ html {
     width: 80px;
     height: 47px;
     border: 0;
+    cursor: pointer;
+    &:hover {
+      font-weight: 500;
+    }
     &--white {
       background: #fafcfe;
       /* border-bottom: 1px solid rgba(191, 198, 220, 0.5); */
