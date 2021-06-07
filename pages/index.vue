@@ -4,7 +4,9 @@
       <Logo class="logo" />
       <section class="editor">
         <h1 class="main__title">Online SQL IDE</h1>
-        <query-editor @find-query="fetchQuery" />
+        <LazyHydrate when-visible>
+          <query-editor @find-query="fetchQuery" />
+        </LazyHydrate>
       </section>
       <section class="main__result">
         <nav class="main__nav">
@@ -54,9 +56,11 @@ import tableComponent from '@/components/Table'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import saveIcon from '@/components/icons/SaveIcon'
 import historyComponent from '@/components/History'
+import LazyHydrate from 'vue-lazy-hydration';
 export default {
   name: 'Index',
   components: {
+    LazyHydrate,
     queryEditor,
     tableComponent,
     saveIcon,
