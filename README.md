@@ -1,9 +1,17 @@
 # sql-editor Performance
 
-```[Web.dev Performance Score](https://lighthouse-dot-webdotdevsite.appspot.com//lh/html?url=https%3A%2F%2Fsql-editor-test.netlify.app%2F)
-```
+[Demo can be found on https://sql-editor-test.netlify.app/] (https://sql-editor-test.netlify.app/)
 
-## Build Setup
+
+[Web.dev Performance Score](https://lighthouse-dot-webdotdevsite.appspot.com//lh/html?url=https%3A%2F%2Fsql-editor-test.netlify.app%2F)
+[](https://gtmetrix.com/reports/sql-editor-test.netlify.app/mqeRjrdc/)
+
+![alt]('./assets/images/Screenshot 2021-06-06 at 01.51.49.png')
+
+## Page Load Time
+```The Page load time of the application was calculated using google chrome's lighthouse feature, GT METRIX, and web.dev.
+```
+### Build Setup
 
 ```bash
 # install dependencies
