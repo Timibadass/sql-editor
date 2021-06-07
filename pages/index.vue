@@ -4,7 +4,7 @@
       <Logo class="logo" />
       <section class="editor">
         <h1 class="main__title">Online SQL IDE</h1>
-        <LazyHydrate when-visible>
+        <LazyHydrate when-idle>
           <query-editor @find-query="fetchQuery" />
         </LazyHydrate>
       </section>
@@ -37,14 +37,16 @@
             Save Query
           </button>
         </nav>
-        <keep-alive>
-          <component
-            :is="currentTab"
-            :query-result="queryResult"
-            :query-history="queryHistory"
-            @find-query="fetchQuery"
-          ></component>
-        </keep-alive>
+        <LazyHydrate on-interaction>
+          <keep-alive>
+            <component
+              :is="currentTab"
+              :query-result="queryResult"
+              :query-history="queryHistory"
+              @find-query="fetchQuery"
+            ></component>
+          </keep-alive>
+        </LazyHydrate>
       </section>
     </div>
   </main>
@@ -56,7 +58,7 @@ import tableComponent from '@/components/Table'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import saveIcon from '@/components/icons/SaveIcon'
 import historyComponent from '@/components/History'
-import LazyHydrate from 'vue-lazy-hydration';
+import LazyHydrate from 'vue-lazy-hydration'
 export default {
   name: 'Index',
   components: {
