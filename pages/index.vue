@@ -37,16 +37,14 @@
             Save Query
           </button>
         </nav>
-        <LazyHydrate on-interaction>
-          <keep-alive>
-            <component
-              :is="currentTab"
-              :query-result="queryResult"
-              :query-history="queryHistory"
-              @find-query="fetchQuery"
-            ></component>
-          </keep-alive>
-        </LazyHydrate>
+        <keep-alive>
+          <component
+            :is="currentTab"
+            :query-result="queryResult"
+            :query-history="queryHistory"
+            @find-query="fetchQuery"
+          ></component>
+        </keep-alive>
       </section>
     </div>
   </main>
